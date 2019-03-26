@@ -16,11 +16,10 @@ public:
 	Qfloat();
 	~Qfloat();
 	Qfloat operator =(Qfloat x);
-	
+
 	void BinToQfloat(bool *bit);
 	void QfloatToBin(bool *bit);
 };
-
 string BinToDec(bool *bit);
 bool *DecToBin(string dec);
 
