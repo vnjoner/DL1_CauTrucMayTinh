@@ -28,9 +28,9 @@ public:
 	// binh
 	Qint operator+(Qint x);
 	Qint operator-(Qint x);
-	//Qint operator*(Qint x);// hung
+	Qint operator*(Qint x);// hung
 
-	//Qint operator / (Qint x);// quang huy
+						   //Qint operator / (Qint x);// quang huy
 
 	bool operator == (Qint x);
 	bool operator >= (Qint x);
@@ -68,12 +68,9 @@ void QintFile(ifstream &is, ofstream &os);
 bool* StringDecToBin(string dec);//binh xong
 bool* StringHexToBin(char* hex);// anh huy
 
-//xuat
+								//xuat
 char * BinToHex(bool *bit);//anh huy
 string BinToDec(bool *bit); //vanhuy
-
-
-
 
 
 Qint::Qint() {
@@ -125,9 +122,7 @@ string chiaHai(string s) {
 	return s;
 }
 
-static int size1 = 0;/*  bien static dung` de nhan biet size cua mang bool*[], su dung kq ez hon */
-
-				/*    ham CONVERT he 10 -> 2    */
+/*    ham CONVERT he 10 -> 2    */
 
 bool* StringDecToBin(string dec) {
 	string kqString = "";
@@ -135,16 +130,16 @@ bool* StringDecToBin(string dec) {
 		return 0;
 	}
 	else {
-		while (dec != "0") {//khi dang khac 0
+		while (dec != "") {//khi dang khac 0
 			kqString = CHECKTanCungLe(dec) + kqString;
 			dec = chiaHai(dec);
 		}
 	}
-	bool *kq = new bool[kqString.size()];
-	size1 = (int)kqString.size();//cap nhat size vao bien static de tien. su dung ket qua
+	bool *kq = new bool[128];
+	memset(kq, 0, 128);
 
-	for (int i = 0; i < kqString.size(); i++) {
-		kq[i] = kqString[i] - '0';
+	for (int i = 0, j = 127; i < kqString.size(); i++) {
+		kq[127 - i] = kqString[kqString.size() - 1 - i] - '0';
 	}
 	return kq;
 }
@@ -330,23 +325,25 @@ string BinToDec(bool *bit) {// Đáng lí ra type trả về là Qint và cắt 
 }
 
 Qint Qint::operator << (Qint a) {
-	bool *dummy = NULL;
+	bool dummy[128] = { 0 };
 	this->QintToBinary(dummy);
-	bool *dummy2 = NULL;
+	bool dummy2[128] = { 0 };
 	a.QintToBinary(dummy2);
 	int b = 0;
 	for (int i = 0; i < 128; i++)
-		if (dummy[i] == 1) {
-			for (int j = i; j < 128; j++)
-				b += pow(2, i);
+		if (dummy2[i] == 1) {
+			for (int j = 127; j >= i; j--)
+				if (dummy2[j] == 1)
+					b += pow(2, 127 - j);
 			break;
 		}
+	cout << b << endl;
 	for (int i = 0; i < 128; i++) {
 		if (dummy[i] == 1) {
 			for (int j = i; j < 128; j++)
 				dummy[j - b] = dummy[j];
-			for (int j = b; j >= 0; j--) {
-				dummy[127 - b] = 0;
+			for (int j = b - 1; j >= 0; j--) {
+				dummy[127 - j] = 0;
 			}
 			break;
 		}
@@ -356,32 +353,39 @@ Qint Qint::operator << (Qint a) {
 }
 
 Qint Qint::operator >> (Qint a) {
-	bool *dummy = NULL;
+	bool dummy[128] = { 0 };
 	this->QintToBinary(dummy);
-	bool *dummy2 = NULL;
+	bool dummy2[128] = { 0 };
 	a.QintToBinary(dummy2);
+	bool dummy3[128] = { 0 };
 	int b = 0;
-	for (int i = 0; i < 128;i++)
-		if (dummy[i] == 1) {
-			for (int j = i; j < 128; j++)
-				b += pow(2, i);
+	for (int i = 0; i < 128; i++)
+		if (dummy2[i] == 1) {
+			for (int j = 127; j >= i; j--)
+				if (dummy2[j] == 1)
+					b += pow(2, 127 - j);
 			break;
 		}
-	for (int i = b; i < 128; i++) {
-		dummy[127 - i - b] = dummy[127 -i];
+	for (int i = 0; i < 128; i++) {
+		if (dummy[i] == 1) {
+			for (int j = i; j < 128; j++) {
+				dummy3[j + b] = dummy[j];
+				if (j + b == 127)
+					break;
+			}
+			break;
+		}
 	}
-	for (int i = 0; i < b; i++)
-		dummy[i] = 0;
-	this->BinToQint(dummy);
+	this->BinToQint(dummy3);
 	return *this;
 }
 
 Qint Qint::Qint_rol() {
-	bool *dummy = NULL;
+	bool dummy[128] = { 0 };
 	this->QintToBinary(dummy);
 	bool kq[128] = { 0 };
 	kq[127] = dummy[0];
-	for (int i =1; i < 128; i++) {
+	for (int i = 1; i < 128; i++) {
 		kq[127 - i] = dummy[127 - i + 1];
 	}
 	this->BinToQint(kq);
@@ -389,7 +393,7 @@ Qint Qint::Qint_rol() {
 }
 
 Qint Qint::Qint_ror() {
-	bool *dummy = NULL; 
+	bool dummy[128] = { 0 };
 	this->QintToBinary(dummy);
 	bool kq[128] = { 0 };
 	kq[0] = dummy[127];
@@ -399,7 +403,6 @@ Qint Qint::Qint_ror() {
 	this->BinToQint(kq);
 	return *this;
 }
-
 
 
 string toBinary(unsigned long long n) {
@@ -423,7 +426,6 @@ string addBinary(string a, string b) {
 
 	//lay index = length max vi index string kq se chay tu max ve 0
 	int index = (int)a.size() - 1 > (int)b.size() - 1 ? (int)a.size() - 1 : (int)a.size() - 1;
-
 	int s = 0;
 
 	string kq = "";// khoi tao bien luu ket qua
@@ -492,11 +494,25 @@ Qint Qint::operator+(Qint x) {
 
 	string kqstring = addBinary(s1, s2); // tinh toan
 
-	bool *kqbool = new bool[kqstring.size()];//mang kq
+										 //bool *kqbool = new bool[128];//mang kq
+										 //memset(kqbool, 0, 128);
 
-	for (int i = 0; i < kqstring.size(); i++) {
+										 //for (int i = (int)kqstring.size() - 1, j = 127; i > 0; i--, j--) {
+										 //	kqbool[j] = kqstring[i] - '0';//chuyen thanh char
+										 //}
+
+										 //for (int i = 0; i < 128; i++)
+										 //	cout << kqbool[i];
+
+										 //kq.BinToQint(kqbool);
+	bool *kqbool = new bool[kqstring.size()];//mang kq
+	memset(kqbool, 0, kqstring.size());
+
+	for (int i = (int)kqstring.size() - 1; i > 0; i--) {
 		kqbool[i] = kqstring[i] - '0';//chuyen thanh char
 	}
+	for (int i = 0; i < kqstring.size(); i++)
+		cout << kqbool[i];
 
 	kq.BinToQint(kqbool);
 	return kq;
@@ -543,11 +559,12 @@ Qint Qint::operator-(Qint x) {
 		s2 += s2_4;
 	}
 
-
+	//a+(~b + 1)
 	DaoBit(s2); //dao bit
 	s2 = addBinary(s2, "1"); //cong them 1 thanh dang bu 2
 
 	string kqstring = addBinary(s1, s2); //cong nhau ra kq
+	kqstring.erase(kqstring.begin());
 
 	bool *kqbool = new bool[kqstring.size()];
 
@@ -559,7 +576,6 @@ Qint Qint::operator-(Qint x) {
 
 	return kq;
 }
-
 
 bool *StringHexToBin(char *hex)
 {
@@ -790,11 +806,9 @@ void QintFile(ifstream &is, ofstream &os) {
 				bit1[127 - j] = opr1[c][opr1[c].length() - 1 - j] - '0';
 			}
 			for (int j = 0; j < opr2[c].length(); j++)
-				bit2[127 - j]  = opr1[c][opr2[c].length() - 1 - j] - '0';
+				bit2[127 - j] = opr1[c][opr2[c].length() - 1 - j] - '0';
 			b1.BinToQint(bit1);
 			b2.BinToQint(bit2);
-			b1.PrintQint();//in bộ nhớ của opr1
-			b2.PrintQint();//in bộ nhớ của opr2
 		}
 
 
@@ -834,6 +848,9 @@ void QintFile(ifstream &is, ofstream &os) {
 			kq = b1.Qint_ror();
 		if (sign[c] == "rol")
 			kq = b1.Qint_rol();
+
+		b1.PrintQint();//in bộ nhớ của opr1
+		b2.PrintQint();//in bộ nhớ của opr2
 
 		bool kqbit[128] = { 0 };
 		kq.QintToBinary(kqbit);
@@ -960,9 +977,10 @@ void main() {
 
 
 
-		ofstream os;
+	ofstream os;
 	ifstream is;
 	QintFile(is, os);
+	system("pause");
 }
 
 
