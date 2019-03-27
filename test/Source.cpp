@@ -580,79 +580,52 @@ Qint Qint::operator-(Qint x) {
 bool *StringHexToBin(char *hex)
 {
 	long int i = 0;
-	while (hex[i])
+	string tmp = ConvertCharToString(hex);
+	string dummy = "";
+	for (i = 0; i < tmp.length(); i++)
 	{
-		switch (hex[i])
-		{
-		case '0':
-			cout << "0000";
-			break;
-		case '1':
-			cout << "0001";
-			break;
-		case '2':
-			cout << "0010";
-			break;
-		case '3':
-			cout << "0011";
-			break;
-		case '4':
-			cout << "0100";
-			break;
-		case '5':
-			cout << "0101";
-			break;
-		case'6':
-			cout << "0110";
-			break;
-		case '7':
-			cout << "0111";
-			break;
-		case '8':
-			cout << "1000";
-			break;
-		case '9':
-			cout << "1001";
-			break;
-		case 'a':
-		case'A':
-			cout << "1010";
-			break;
-		case 'B':
-		case 'b':
-			cout << "1011";
-			break;
-		case 'C':
-		case 'c':
-			cout << "1100";
-			break;
-		case 'D':
-		case 'd':
-			cout << "1101";
-			break;
-		case 'E':
-		case 'e':
-			cout << "1110";
-			break;
-		case 'F':
-		case 'f':
-			cout << "1111";
-			break;
-		default:
-			cout << "\nkhong ton tai he so co 2" << endl;
-			cout << hex[i];
-			break;
-		}
-		i++;
+		string dummy = dummy.substr(i, i + 4);
+		if (tmp[i] == '0')
+			dummy += "0000";
+		else if (tmp[i] == '1')
+			dummy += "0001";
+		else if (tmp[i] == '2')
+			dummy += "0010";
+		else if (tmp[i] == '3')
+			dummy += "0011";
+		else if (tmp[i] == '4')
+			dummy += "0100";
+		else if (tmp[i] == '5')
+			dummy += "0101";
+		else if (tmp[i] == '6')
+			dummy += "0110";
+		else if (tmp[i] == '7')
+			dummy += "0111";
+		else if (tmp[i] == '8')
+			dummy += "1000";
+		else if (tmp[i] == '9')
+			dummy += "1001";
+		else if (tmp[i] == 'a' || tmp[i] == 'A')
+			dummy += "1010";
+		else if (tmp[i] == 'b' || tmp[i] == 'B')
+			dummy += "1011";
+		else if (tmp[i] == 'c' || tmp[i] == 'C')
+			dummy += "1100";
+		else if (tmp[i] == 'd' || tmp[i] == 'D')
+			dummy += "1101";
+		else if (tmp[i] == 'e' || tmp[i] == 'E')
+			dummy += "1110";
+		else if (tmp[i] == 'f' || tmp[i] == 'F')
+			dummy += "1111";
 	}
-	bool* kq = new bool[strlen(hex)];
-	int size = strlen(hex);
-	for (int i = 0; i< size; i++) {
-		kq[i] = hex[i] - '0';
+	bool *kq = new bool[128];
+	memset(kq, 0, 128);
+	for (int j = sizeof(kq) - 1; j >= 0; j--)
+	{
+		kq[j] = dummy[j];
 	}
 	return kq;
 }
-
 string ConvertCharToString(char *ch)
 {
 	std::string str(ch);
