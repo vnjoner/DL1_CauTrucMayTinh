@@ -25,25 +25,46 @@ Qfloat::operator=(const Qfloat &x) {
 
 void Qfloat::BinToQfloat(bool *bit) {
 	int i = 127;
-	while (i >= 96) {
-		tp1 += bit[i] * pow(2, 127 - i);
+	int j;
+	j = 31;
+	while (j >= 0) {
+		if (bit[i] == 1) {
+			tp1 += pow(2, 31 - j);
+		}
 		i--;
+		j--;
 	}
+	j = 31;
 	while (i >= 64) {
-		tp2 += bit[i] * pow(2, 127 - i);
+		if (bit[i] == 1) {
+			tp2 += pow(2, 31 - j);
+		}
 		i--;
+		j--;
 	}
+	j = 31;
 	while (i >= 32) {
-		tp3 += bit[i] * pow(2, 127 - i);
+		if (bit[i] == 1) {
+			tp3 += pow(2, 31 - j);
+		}
 		i--;
+		j--;
 	}
+	j = 15;
 	while (i >= 16) {
-		tp4 += bit[i] * pow(2, 127 - i);
+		if (bit[i] == 1) {
+			tp4 += pow(2, 31 - j);
+		}
 		i--;
+		j--;
 	}
+	j = 15;
 	while (i >= 0) {
-		nguyen += bit[i] * pow(2, 127 - i);
+		if (bit[i] == 1) {
+			nguyen += pow(2, 15 - j);
+		}
 		i--;
+		j--;
 	}
 }
 

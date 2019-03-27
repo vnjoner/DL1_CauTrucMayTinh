@@ -10,6 +10,7 @@ class Qint
 private:
     int a1, a2, a3, a4;
 public:
+<<<<<<< HEAD
     //hung
     Qint();
     ~Qint() {};
@@ -56,6 +57,54 @@ public:
     void PrintQint() {
         cout << a4 << "  " << a2 << "  " << a3 << "  " << a1 << endl;
     }
+=======
+	//hung
+	Qint();
+	~Qint() {};
+	Qint operator = (Qint x) {
+		if (this == &x)
+			return *this;
+		else {
+			this->a1 = x.a1;
+			this->a2 = x.a2;
+			this->a3 = x.a3;
+			this->a4 = x.a4;
+		}
+		return *this;
+	}
+
+	// binh
+	Qint operator+(Qint x);
+	Qint operator-(Qint x);
+	Qint operator*(Qint x);// hung
+
+						   //Qint operator / (Qint x);// quang huy
+
+	bool operator == (Qint x);
+	bool operator >= (Qint x);
+	bool operator <= (Qint x);
+	bool operator > (Qint x);
+	bool operator < (Qint x);
+
+	// van huy
+	Qint operator &(Qint x);
+	Qint operator | (Qint x);
+	Qint operator ^(Qint x);
+	Qint operator ~();
+
+	//hung
+	Qint operator <<(Qint a);
+	Qint operator >> (Qint a);
+	Qint Qint_rol();
+	Qint Qint_ror();
+
+	void BinToQint(bool* bit);
+	void QintToBinary(bool bit[]);
+
+	void PrintQint() {
+		cout << a4 << "  " << a2 << "  " << a3 << "  " << a1 << endl;
+	}
+>>>>>>> 7b0f47a777d9c56ae5ab0bbe8a5d33b340585428
 };
 
 
@@ -68,12 +117,9 @@ void QintFile(ifstream &is, ofstream &os);
 bool* StringDecToBin(string dec);//binh xong
 bool* StringHexToBin(char* hex);// anh huy
 
-//xuat
+								//xuat
 char * BinToHex(bool *bit);//anh huy
 string BinToDec(bool *bit); //vanhuy
-
-
-
 
 
 Qint::Qint() {
@@ -132,6 +178,7 @@ string chiaHai(string s)
     return kq;
 }
 
+<<<<<<< HEAD
 static int size1 = 0;/*  bien static dung` de nhan biet size cua mang bool*[], su dung kq ez hon */
 
 /*    ham CONVERT he 10 -> 2    */
@@ -154,6 +201,28 @@ bool* StringDecToBin(string dec) {
         kq[i] = kqString[i] - '0';
     }
     return kq;
+=======
+/*    ham CONVERT he 10 -> 2    */
+
+bool* StringDecToBin(string dec) {
+	string kqString = "";
+	if (dec == "0") {//neu bang 0 thi ngung
+		return 0;
+	}
+	else {
+		while (dec != "") {//khi dang khac 0
+			kqString = CHECKTanCungLe(dec) + kqString;
+			dec = chiaHai(dec);
+		}
+	}
+	bool *kq = new bool[128];
+	memset(kq, 0, 128);
+
+	for (int i = 0, j = 127; i < kqString.size(); i++) {
+		kq[127 - i] = kqString[kqString.size() - 1 - i] - '0';
+	}
+	return kq;
+>>>>>>> 7b0f47a777d9c56ae5ab0bbe8a5d33b340585428
 }
 
 void Qint::QintToBinary(bool bit[]) {// đổi từ 4 int ra dãy nhị phân, lưu thông qua tham chiếu bit[],
@@ -337,6 +406,7 @@ string BinToDec(bool *bit) {// Đáng lí ra type trả về là Qint và cắt 
 }
 
 Qint Qint::operator << (Qint a) {
+<<<<<<< HEAD
     bool *dummy = NULL;
     this->QintToBinary(dummy);
     bool *dummy2 = NULL;
@@ -405,8 +475,86 @@ Qint Qint::Qint_ror() {
     }
     this->BinToQint(kq);
     return *this;
+=======
+	bool dummy[128] = { 0 };
+	this->QintToBinary(dummy);
+	bool dummy2[128] = { 0 };
+	a.QintToBinary(dummy2);
+	int b = 0;
+	for (int i = 0; i < 128; i++)
+		if (dummy2[i] == 1) {
+			for (int j = 127; j >= i; j--)
+				if (dummy2[j] == 1)
+					b += pow(2, 127 - j);
+			break;
+		}
+	cout << b << endl;
+	for (int i = 0; i < 128; i++) {
+		if (dummy[i] == 1) {
+			for (int j = i; j < 128; j++)
+				dummy[j - b] = dummy[j];
+			for (int j = b - 1; j >= 0; j--) {
+				dummy[127 - j] = 0;
+			}
+			break;
+		}
+	}
+	this->BinToQint(dummy);
+	return *this;
 }
 
+Qint Qint::operator >> (Qint a) {
+	bool dummy[128] = { 0 };
+	this->QintToBinary(dummy);
+	bool dummy2[128] = { 0 };
+	a.QintToBinary(dummy2);
+	bool dummy3[128] = { 0 };
+	int b = 0;
+	for (int i = 0; i < 128; i++)
+		if (dummy2[i] == 1) {
+			for (int j = 127; j >= i; j--)
+				if (dummy2[j] == 1)
+					b += pow(2, 127 - j);
+			break;
+		}
+	for (int i = 0; i < 128; i++) {
+		if (dummy[i] == 1) {
+			for (int j = i; j < 128; j++) {
+				dummy3[j + b] = dummy[j];
+				if (j + b == 127)
+					break;
+			}
+			break;
+		}
+	}
+	this->BinToQint(dummy3);
+	return *this;
+}
+
+Qint Qint::Qint_rol() {
+	bool dummy[128] = { 0 };
+	this->QintToBinary(dummy);
+	bool kq[128] = { 0 };
+	kq[127] = dummy[0];
+	for (int i = 1; i < 128; i++) {
+		kq[127 - i] = dummy[127 - i + 1];
+	}
+	this->BinToQint(kq);
+	return *this;
+}
+
+Qint Qint::Qint_ror() {
+	bool dummy[128] = { 0 };
+	this->QintToBinary(dummy);
+	bool kq[128] = { 0 };
+	kq[0] = dummy[127];
+	for (int i = 1; i < 128; i++) {
+		kq[i] = dummy[i - 1];
+	}
+	this->BinToQint(kq);
+	return *this;
+>>>>>>> 7b0f47a777d9c56ae5ab0bbe8a5d33b340585428
+}
 
 
 string toBinary(unsigned long long n) {
@@ -420,6 +568,7 @@ string toBinary(unsigned long long n) {
 
 /*   ham cong hai so he 2, tra ve string   */
 string addBinary(string a, string b) {
+<<<<<<< HEAD
     while (a.size() > b.size()) { // them so 0 cho ngang size
         b = "0" + b;
     }
@@ -442,6 +591,30 @@ string addBinary(string a, string b) {
         index--;
     }
     return kq;
+=======
+	while (a.size() > b.size()) { // them so 0 cho ngang size
+		b = "0" + b;
+	}
+
+	while (a.size() < b.size()) { //them so 0 cho ngang size
+		a = "0" + a;
+	}
+
+	//lay index = length max vi index string kq se chay tu max ve 0
+	int index = (int)a.size() - 1 > (int)b.size() - 1 ? (int)a.size() - 1 : (int)a.size() - 1;
+	int s = 0;
+
+	string kq = "";// khoi tao bien luu ket qua
+
+	while (index > 0 || s == 1) {
+		//thuc hien tinh toan va` tinh carry tu` phan tu indexth -> 0th
+		s = s + (getBit(a, index) + getBit(b, index));
+		kq = (char)(s % 2 + '0') + kq;
+		s /= 2;
+		index--;
+	}
+	return kq;
+>>>>>>> 7b0f47a777d9c56ae5ab0bbe8a5d33b340585428
 }
 
 /*  ham dao bit tu 0 -> 1, va nguoc lai, 1 -> 0 (operator -)  */
@@ -457,6 +630,7 @@ void DaoBit(string &s) {
 }
 
 Qint Qint::operator+(Qint x) {
+<<<<<<< HEAD
     
     /* operator dung ham cong ben ngoai, nhan vao 2 string, tra ve 1 string, sau do chuyen sang Qint */
     /* s1,s2 la 2 string nhan vao, s1_1..4, s2_1..4 la 2 string con de check xem a1, a2, a3, a4 co ton tai khong */
@@ -506,10 +680,76 @@ Qint Qint::operator+(Qint x) {
     
     kq.BinToQint(kqbool);
     return kq;
+=======
+
+	/* operator dung ham cong ben ngoai, nhan vao 2 string, tra ve 1 string, sau do chuyen sang Qint */
+	/* s1,s2 la 2 string nhan vao, s1_1..4, s2_1..4 la 2 string con de check xem a1, a2, a3, a4 co ton tai khong */
+
+	Qint kq;
+	string s1, s2;
+	if (this->a4) {
+		string s1_1 = toBinary(this->a4);
+		s1 = s1_1;
+	}
+	if (this->a3) {
+		string s1_2 = toBinary(this->a3);
+		s1 += s1_2;
+	}
+	if (this->a2) {
+		string s1_3 = toBinary(this->a2);
+		s1 += s1_3;
+	}
+	if (this->a1) {
+		string s1_4 = toBinary(this->a1);
+		s1 += s1_4;
+	}
+	if (x.a4) {
+		string s2_1 = toBinary(x.a4);
+		s2 = s2_1;
+	}
+	if (x.a3) {
+		string s2_2 = toBinary(x.a3);
+		s2 += s2_2;
+	}
+	if (x.a2) {
+		string s2_3 = toBinary(x.a2);
+		s2 += s2_3;
+	}
+	if (x.a1) {
+		string s2_4 = toBinary(x.a1);
+		s2 += s2_4;
+	}
+
+	string kqstring = addBinary(s1, s2); // tinh toan
+
+										 //bool *kqbool = new bool[128];//mang kq
+										 //memset(kqbool, 0, 128);
+
+										 //for (int i = (int)kqstring.size() - 1, j = 127; i > 0; i--, j--) {
+										 //	kqbool[j] = kqstring[i] - '0';//chuyen thanh char
+										 //}
+
+										 //for (int i = 0; i < 128; i++)
+										 //	cout << kqbool[i];
+
+										 //kq.BinToQint(kqbool);
+	bool *kqbool = new bool[kqstring.size()];//mang kq
+	memset(kqbool, 0, kqstring.size());
+
+	for (int i = (int)kqstring.size() - 1; i > 0; i--) {
+		kqbool[i] = kqstring[i] - '0';//chuyen thanh char
+	}
+	for (int i = 0; i < kqstring.size(); i++)
+		cout << kqbool[i];
+
+	kq.BinToQint(kqbool);
+	return kq;
+>>>>>>> 7b0f47a777d9c56ae5ab0bbe8a5d33b340585428
 }
 
 
 Qint Qint::operator-(Qint x) {
+<<<<<<< HEAD
     
     /* operator - theo quy tac chuyen so thu 2 sang dang bu` 2's sau do thuc hien phep cong nhu thuong le*/
     /* cac buoc thuc hien giong nhu operator + */
@@ -565,11 +805,68 @@ Qint Qint::operator-(Qint x) {
     kq.BinToQint(kqbool);
     
     return kq;
-}
+=======
 
+	/* operator - theo quy tac chuyen so thu 2 sang dang bu` 2's sau do thuc hien phep cong nhu thuong le*/
+	/* cac buoc thuc hien giong nhu operator + */
+
+	Qint kq;
+	string s1, s2;
+	if (this->a4) {
+		string s1_1 = toBinary(this->a4);
+		s1 = s1_1;
+	}
+	if (this->a3) {
+		string s1_2 = toBinary(this->a3);
+		s1 += s1_2;
+	}
+	if (this->a2) {
+		string s1_3 = toBinary(this->a2);
+		s1 += s1_3;
+	}
+	if (this->a1) {
+		string s1_4 = toBinary(this->a1);
+		s1 += s1_4;
+	}
+	if (x.a4) {
+		string s2_1 = toBinary(x.a4);
+		s2 = s2_1;
+	}
+	if (x.a3) {
+		string s2_2 = toBinary(x.a3);
+		s2 += s2_2;
+	}
+	if (x.a2) {
+		string s2_3 = toBinary(x.a2);
+		s2 += s2_3;
+	}
+	if (x.a1) {
+		string s2_4 = toBinary(x.a1);
+		s2 += s2_4;
+	}
+
+	//a+(~b + 1)
+	DaoBit(s2); //dao bit
+	s2 = addBinary(s2, "1"); //cong them 1 thanh dang bu 2
+
+	string kqstring = addBinary(s1, s2); //cong nhau ra kq
+	kqstring.erase(kqstring.begin());
+
+	bool *kqbool = new bool[kqstring.size()];
+
+	for (int i = 0; i < kqstring.size(); i++) {
+		kqbool[i] = kqstring[i] - '0';
+	}
+
+	kq.BinToQint(kqbool);
+
+	return kq;
+>>>>>>> 7b0f47a777d9c56ae5ab0bbe8a5d33b340585428
+}
 
 bool *StringHexToBin(char *hex)
 {
+<<<<<<< HEAD
     long int i = 0;
     while (hex[i])
     {
@@ -642,8 +939,55 @@ bool *StringHexToBin(char *hex)
         kq[i] = hex[i] - '0';
     }
     return kq;
+=======
+	long int i = 0;
+	string tmp = ConvertCharToString(hex);
+	string dummy = "";
+	for (i = 0; i < tmp.length(); i++)
+	{
+		string dummy = dummy.substr(i, i + 4);
+		if (tmp[i] == '0')
+			dummy += "0000";
+		else if (tmp[i] == '1')
+			dummy += "0001";
+		else if (tmp[i] == '2')
+			dummy += "0010";
+		else if (tmp[i] == '3')
+			dummy += "0011";
+		else if (tmp[i] == '4')
+			dummy += "0100";
+		else if (tmp[i] == '5')
+			dummy += "0101";
+		else if (tmp[i] == '6')
+			dummy += "0110";
+		else if (tmp[i] == '7')
+			dummy += "0111";
+		else if (tmp[i] == '8')
+			dummy += "1000";
+		else if (tmp[i] == '9')
+			dummy += "1001";
+		else if (tmp[i] == 'a' || tmp[i] == 'A')
+			dummy += "1010";
+		else if (tmp[i] == 'b' || tmp[i] == 'B')
+			dummy += "1011";
+		else if (tmp[i] == 'c' || tmp[i] == 'C')
+			dummy += "1100";
+		else if (tmp[i] == 'd' || tmp[i] == 'D')
+			dummy += "1101";
+		else if (tmp[i] == 'e' || tmp[i] == 'E')
+			dummy += "1110";
+		else if (tmp[i] == 'f' || tmp[i] == 'F')
+			dummy += "1111";
+	}
+	bool *kq = new bool[128];
+	memset(kq, 0, 128);
+	for (int j = sizeof(kq) - 1; j >= 0; j--)
+	{
+		kq[j] = dummy[j];
+	}
+	return kq;
+>>>>>>> 7b0f47a777d9c56ae5ab0bbe8a5d33b340585428
 }
-
 string ConvertCharToString(char *ch)
 {
     std::string str(ch);
@@ -711,6 +1055,7 @@ char *BinToHex(bool *bit)
 }
 
 void QintFile(ifstream &is, ofstream &os) {
+<<<<<<< HEAD
     string s[100];
     string opr1[100];
     string opr2[100];
@@ -870,6 +1215,168 @@ void QintFile(ifstream &is, ofstream &os) {
     os.close();
     
     return;
+=======
+	string s[100];
+	string opr1[100];
+	string opr2[100];
+	string sign[100];
+	string p1[100], p2[100];
+	int z = 0;
+	is.open("input.txt", ios::in);
+
+	while (!is.eof()) {
+		getline(is, s[z]);
+		z++;
+	}
+	is.close();
+
+	for (int c = 0; c < z; c++) {
+		int i;
+		if (s[c][0] == '2' && s[c][1] == ' ') {
+			p1[c] = s[c][0];
+			if (s[c][3] == ' ' && s[c][2] == '2') {
+				p2[c] = s[c][2];
+				i = 4;
+			}
+			else {
+				if (s[c][1] == ' ' && s[c][2] == '1' && s[c][4] == ' ' && (s[c][3] == '0' | s[c][3] == '6')) {
+					p2[c] = s[c][2];
+					p2[c] += s[c][3];
+					i = 5;
+				}
+				else {
+					i = 2;
+				}
+			}
+		}
+		if (s[c][0] == '1' && s[c][2] == ' ') {
+			p1[c] += s[0][0];
+			p1[c] += s[c][1];
+			if (s[c][2] == ' ' && s[c][3] == '2' && s[c][4] == ' ') {
+				p2[c] += s[c][3];
+				i = 5;
+			}
+			else {
+				if (s[c][2] == ' ' && s[c][5] == ' ' && s[c][3] == '1' && (s[c][3] == '6' | s[c][3] == '0')) {
+					p2[c] += s[c][3];
+					p2[c] += s[c][2];
+					i = 6;
+				}
+				else {
+					i = 3;
+				}
+			}
+		}
+
+		if (s[c][i] == '~') {
+			sign[c] = s[c][i];
+			i += 2;
+		}
+
+
+		for (i; s[c][i] != ' ' && i < s[c].length(); i++) {
+			opr1[c] += s[c][i];
+		}
+		i++;
+		if (i >= s[c].length())
+			continue;
+		for (i; s[c][i] != ' '&& i < s[c].length(); i++) {
+			sign[c] += s[c][i];
+		}
+		i++;
+		if (i >= s[c].length())
+			continue;
+		for (i; i < s[c].length(); i++) {
+			opr2[c] += s[c][i];
+		}
+	}
+
+	Qint b1;
+	Qint b2;
+	Qint kq;
+	for (int c = 0; c < z; c++) {
+		if (p1[c] == "2") {
+			bool bit1[128] = { 0 };
+			bool bit2[128] = { 0 };
+			for (int j = 0; j < opr1[c].length(); j++) {
+				bit1[127 - j] = opr1[c][opr1[c].length() - 1 - j] - '0';
+			}
+			for (int j = 0; j < opr2[c].length(); j++)
+				bit2[127 - j] = opr1[c][opr2[c].length() - 1 - j] - '0';
+			b1.BinToQint(bit1);
+			b2.BinToQint(bit2);
+		}
+
+
+		if (p1[c] == "16") {
+			char hex1[32] = { 0 };
+			char hex2[32] = { 0 };
+			for (int j = 0; j < opr1[c].length(); j++)
+				hex1[31 - j] = opr1[c][opr1[c].length() - 1 - j];
+			for (int j = 0; j < opr2[c].length(); j++)
+				hex2[31 - j] = opr2[c][opr2[c].length() - 1 - j];
+			bool *bit1 = StringHexToBin(hex1);
+			bool *bit2 = StringHexToBin(hex2);
+			b1.BinToQint(bit1);
+			b2.BinToQint(bit2);
+		}
+
+		if (p1[c] == "10") {
+			bool *bit1 = StringDecToBin(opr1[c]);
+			bool *bit2 = StringDecToBin(opr2[c]);
+			b1.BinToQint(bit1);
+			b2.BinToQint(bit2);
+		}
+
+		if (sign[c] == "+")
+			kq = b1 + b2;
+		if (sign[c] == "-")
+			kq = b1 - b2;
+		//if (sign[c] == "*")
+		//	kq = b1 * b2;
+		//if (sign[c] == "/")
+		//	kq = b1 / b2;
+		if (sign[c] == "<<")
+			kq = b1 << b2;
+		if (sign[c] == ">>")
+			kq = b1 >> b2;
+		if (sign[c] == "ror")
+			kq = b1.Qint_ror();
+		if (sign[c] == "rol")
+			kq = b1.Qint_rol();
+
+		b1.PrintQint();//in bộ nhớ của opr1
+		b2.PrintQint();//in bộ nhớ của opr2
+
+		bool kqbit[128] = { 0 };
+		kq.QintToBinary(kqbit);
+		kq.PrintQint();//in bộ nhớ của Qint
+		os.open("output.txt", ios::out);
+
+		if ((p1[c] == "2" && p2[c] == "") | p2[c] == "2") {
+			for (int i = 0; i < 128; i++)
+				cout << kqbit[i];
+		}
+
+		if ((p1[c] == "10" && p2[c] == "") | p2[c] == "10") {
+			string kqdec = BinToDec(kqbit);
+			cout << kqdec;
+		}
+
+		if ((p1[c] == "16" && p2[c] == "") | p2[c] == "16") {
+			char *kqhex = BinToHex(kqbit);
+			for (int i = 0; i < 32; i++)
+				cout << kqhex[i];
+		}
+
+		cout << endl;
+	}
+
+
+	os.close();
+
+	return;
+>>>>>>> 7b0f47a777d9c56ae5ab0bbe8a5d33b340585428
 }
 
 
@@ -877,6 +1384,7 @@ void QintFile(ifstream &is, ofstream &os) {
 
 
 
+<<<<<<< HEAD
 int main() {
     //ifstream is;
     //string s[100];
@@ -970,6 +1478,102 @@ int main() {
     ofstream os;
     ifstream is;
     QintFile(is, os);
+=======
+void main() {
+	//ifstream is;
+	//string s[100];
+	//string opr1[100];
+	//string opr2[100];
+	//string sign[100];
+	////int size = 0;
+	//string p1[100], p2[100];
+	//int z = 0;
+
+
+
+	//is.open("input.txt", ios::in);
+
+	//while (!is.eof()) {
+	//	getline(is, s[z]);
+	//	z++;
+	//}
+	//is.close();
+
+
+	//for (int c = 0; c < z; c++) {
+	//	int i;
+	//	if (s[c][0] == '2' && s[c][1] == ' ') {
+	//		p1[c] = s[c][0];
+	//		if (s[c][3] == ' ' && s[c][2] == '2') {
+	//			p2[c] = s[c][2];
+	//			i = 4;
+	//		}
+	//		else {
+	//			if (s[c][1] == ' ' && s[c][2] == '1' && s[c][4] == ' ' && (s[c][3] == '0' | s[c][3] == '6')) {
+	//				p2[c] = s[c][2];
+	//				p2[c] += s[c][3];
+	//				i = 5;
+	//			}
+	//			else {
+	//				i = 2;
+	//			}
+	//		}
+	//	}
+
+	//	if (s[c][0] == '1' && s[c][2] == ' ') {
+	//		p1[c] += s[0][0];
+	//		p1[c] += s[c][1];
+	//		if (s[c][2] == ' ' && s[c][3] == '2' && s[c][4] == ' ' ) {
+	//			p2[c] += s[c][3];
+	//			i = 5;
+	//		}
+	//		else {
+	//			if (s[c][2] == ' ' && s[c][5] == ' ' && s[c][3] == '1' && ( s[c][3] == '6' | s[c][3] == '0')) {
+	//				p2[c] += s[c][3];
+	//				p2[c] += s[c][2];
+	//				i = 6;
+	//			}
+	//			else {
+	//				i = 3;
+	//			}
+	//		}
+	//	}
+
+	//	if (s[c][i] == '~') {
+	//		sign[c] = s[c][i];
+	//		i += 2;
+	//		cout << "sign: " << sign[c] << endl;
+	//	}
+
+
+	//	for (i; s[c][i] != ' ' && i < s[c].length(); i++) {
+	//		opr1[c] += s[c][i];
+	//	}
+	//	cout << "opr1: ";
+	//	cout << opr1[c] << endl;
+	//	i++;
+	//	if (i >= s[c].length())
+	//		continue;
+	//	for (i; s[c][i] != ' '&& i < s[c].length(); i++) {
+	//		sign[c] += s[c][i];
+	//	}
+	//	cout << "sign: " << sign[c] << endl;
+	//	i++;
+	//	if (i >= s[c].length())
+	//		continue;
+	//	for (i; i < s[c].length(); i++) {
+	//		opr2[c] += s[c][i];
+	//	}
+	//	cout << "opr2: " << opr2[c] << endl << endl;
+	//}
+
+
+
+	ofstream os;
+	ifstream is;
+	QintFile(is, os);
+	system("pause");
+>>>>>>> 7b0f47a777d9c56ae5ab0bbe8a5d33b340585428
 }
 
 
