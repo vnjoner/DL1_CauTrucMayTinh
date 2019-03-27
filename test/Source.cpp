@@ -863,27 +863,6 @@ Qint Qint::operator-(Qint x) {
 	return kq;
 >>>>>>> 7b0f47a777d9c56ae5ab0bbe8a5d33b340585428
 }
-// operator /
-Qint operator++()
-	{
-		Qint x;
-		x.a4 = 0;
-		x.a3 = 0;
-		x.a2 = 0;
-		x.a1 = 1;
-		return *this + x;
-	}
-	Qint operator/ (Qint x)
-	{
-		Qint kq;
-		while (*this >= x)
-		{
-			*this = *this - x;
-			kq++;
-		}
-		return kq;
-	}
-///////////////////////////////////////////////////////////
 bool *StringHexToBin(char *hex)
 {
 <<<<<<< HEAD
