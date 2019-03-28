@@ -57,14 +57,6 @@ bool Qint::operator < (Qint x)
 	x.QintToBinary(b);
 	this->QintToBinary(a);
 
-
-	for (int i = 0; i < 128; i++)
-		cout << a[i];
-	cout << endl;
-	for (int i = 0; i < 128; i++)
-		cout << b[i];
-	cout << endl;
-
 	for (int i = 1; i < 128; i++) {
 		if (a[i] > b[i] && a[0] == 0) {
 			return false;
@@ -447,17 +439,12 @@ Qint Qint::operator+(Qint x) {
 	bool *kqbool = new bool[128];//mang kq
 	memset(kqbool, 0, 128);
 
-	cout << kqstring[127] << kqstring[126] << kqstring[125] << kqstring[124] << kqstring[123];
 
 	for (int i = 0; i < 128; i++) {
 		kqbool[i] = kqstring[i] - '0';//chuyen thanh char
 	}
-	for (int i = 0; i < 128; i++) {
-		cout << kqbool[i];
-	}
 
 	kq.BinToQint(kqbool);
-	kq.PrintQint();
 	return kq;
 }
 
@@ -521,8 +508,6 @@ Qint Qint::operator-(Qint x) {
 
 	kq.BinToQint(kqbool);
 	delete[] kqbool;
-
-	kq.PrintQint();
 	return kq;
 }
 
@@ -766,13 +751,9 @@ void QintFile(ifstream &is, ofstream &os) {
 			kq = b1;
 		}
 
-		b1.PrintQint();
-		b2.PrintQint();
 
 		bool kqbit[128] = { 0 };
 		kq.QintToBinary(kqbit);
-
-		kq.PrintQint();
 
 		os.open("output.txt", ios::out);
 
