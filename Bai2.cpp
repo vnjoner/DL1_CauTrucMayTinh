@@ -247,7 +247,6 @@ bool *DecToBin(string sFLOAT){
     }
     return kq;
 }
-<<<<<<< HEAD
 void QfloatFile(ifstream &is, ofstream &os) {
 	string s[100];
 	string opr1[100];
@@ -343,69 +342,101 @@ void QfloatFile(ifstream &is, ofstream &os) {
 
 	return;
 }
-=======
 
-// phan chuyen bit -> so thuc
-string BinToDec(bool * bit)
-{
-	string str;// luu so thuc he 10
-	int phanNguyen = 0;
-	bool dau = bit[0];
-	for (int i = 15; i > 0; i--) {
-		if(bit[i]  == 1)
-			phanNguyen += pow(2, 15 - i) ;
+void QfloatFile(ifstream &is, ofstream &os) {
+	string s[100];
+	string opr1[100];
+	string p1[100], p2[100];
+	int z = 0;
+	is.open("input.txt", ios::in);
+
+	while (!is.eof()) {
+		getline(is, s[z]);
+		z++;
 	}
-	int multi2[120] = { 0 };
-	int decimal[120] = { 0 };
-	multi2[119] = 1;
-	int memo;
-	for (int i = 16; i < 128; i++)
-	{
-		memo = 0;
-		for (int j = 119; j >= 0; j--)
-		{
-			int temp = multi2[j];
-			multi2[j] = (multi2[j] * 5 + memo) % 10;
-			memo= (temp * 5 + memo) / 10;
-		}
-		if (bit[i] != 0) {
-			memo = 0;
-			int count = 119;
-			for (int j = i-16; j >= 0; j--)
-			{
-				int d = decimal[j];
-				decimal[j] = (decimal[j] + multi2[count] + memo) % 10;
-				memo = (d + multi2[count] + memo) / 10;
-				count--;
+	is.close();
+
+	for (int c = 0; c < z; c++) {
+		int i;
+		if (s[c][0] == '2' && s[c][1] == ' ') {//nhan vao la he 2
+			p1[c] = s[c][0];
+			if (s[c][3] == ' ' && s[c][2] == '2') {//dau ra la he 2
+				p2[c] = s[c][2];
+				i = 4;
+			}
+			else {
+				if (s[c][1] == ' ' && s[c][2] == '1' && s[c][4] == ' ' && s[c][3] == '0') {//dau ra la he 10
+					p2[c] = s[c][2];
+					p2[c] += s[c][3];
+					i = 5;
+				}
+				else {// dau ra khong ghi thong tin
+					i = 2;
+				}
 			}
 		}
+		if (s[c][0] == '1' && s[c][2] == ' ') { //nhan vao la he 10
+			p1[c] += s[0][0];
+			p1[c] += s[c][1];
+			if (s[c][2] == ' ' && s[c][3] == '2' && s[c][4] == ' ') {// dau ra la he 2
+				p2[c] += s[c][3];
+				i = 5;
+			}
+			else {
+				if (s[c][2] == ' ' && s[c][5] == ' ' && s[c][3] == '1' &&  s[c][3] == '0') {//dau ra la he 10
+					p2[c] += s[c][3];
+					p2[c] += s[c][2];
+					i = 6;
+				}
+				else {// dau ra khong ghi thong tin
+					i = 3;
+				}
+			}
+		}
+
+
+		for (i; s[c][i] != ' ' && i < s[c].length(); i++) {// add opr1
+			opr1[c] += s[c][i];
+		}
 	}
-	int index;
-	for (index = 119; index >= 0; index--) {
-		if (decimal[index] != 0)
-			break;
+
+	Qfloat kq;
+
+	for (int c = 0; c < z; c++) {
+		if (p1[c] == "2") {//nhan vao la binary
+			bool bit1[128] = { 0 };
+			for (int j = 0; j < opr1[c].length(); j++) {//string binary -> bool binary
+				bit1[127 - j] = opr1[c][opr1[c].length() - 1 - j] - '0';
+			}
+			kq.BinToQfloat(bit1);// bin -> Qfloat
+		}
+
+		if (p1[c] == "10") {// nhan vao la dec
+			bool *bit1 = DecToBin(opr1[c]);//dec -> bin
+			kq.BinToQfloat(bit1);//bin -> Qfloat
+		}
+
+		bool kqbit[128] = { 0 };
+		kq.QfloatToBin(kqbit);//kq tu Qloat -> bin
+		os.open("output.txt", ios::out);
+
+		if ((p1[c] == "2" && p2[c] == "") | p2[c] == "2") {
+			for (int i = 0; i < 128; i++)
+				cout << kqbit[i];
+		}
+
+		if ((p1[c] == "10" && p2[c] == "") | p2[c] == "10") {
+			string kqdec = BinToDec(kqbit);
+			cout << kqdec;
+		}
+
+		cout << endl;
 	}
-	while (phanNguyen != 0)
-	{
-		str = char(phanNguyen % 10 + 48) + str;
-		phanNguyen /= 10;
-	}
-	if(index >= 0)
-		str += ".";
-	for (int i = 0; i <= index; i++)
-	{
-		str += char(decimal[i] + 48);
-	}
-	if (bit[0] == 1)
-		str = "-" + str;
-	else
-		str = "+" + str;
-	return str;
+
+	os.close();
+
+	return;
 }
-
-
-
->>>>>>> e24adcc017cc75c9b43e470cab9aca9976025e08
 //phan comment duoi la fix operator bai 1
 //string toBinary(unsigned long long n) {
 //    string kq;
