@@ -81,6 +81,7 @@ Qint::~Qint() {
 
 }
 
+
 bool Qint::operator == (Qint x)
 {
 	if (this->a1 == x.a1 && this->a2 == x.a2 && this->a3 == x.a3 && this->a4 == x.a4)
@@ -102,8 +103,9 @@ bool Qint::operator <= (Qint x)
 }
 bool Qint::operator > (Qint x)
 {
-	if (*this < x && !(*this == x))
+	if (*this < x) {
 		return false;
+	}
 	return true;
 }
 bool Qint::operator < (Qint x)
@@ -114,12 +116,28 @@ bool Qint::operator < (Qint x)
 	x.QintToBinary(b);
 	this->QintToBinary(a);
 
-	for (int i = 1; i < 128; i++) {
-		if (a[i] > b[i] && a[0] == 0) {
-			return false;
+
+	if (a[0] > b[0]) {
+		return true;
+	}
+	if (a[0] < b[0])
+		return false;
+
+	for (int i = 0; i < 128; i++) {
+		if (a[i] != b[i]) {
+			if (a[0] == 0 && b[0] == 0) {// so duong
+				if (a[i] > b[i])
+					return false;
+				else
+					return true;
+			}
+			if (a[0] == 1 && b[0] == 1) {// so am
+				if (a[i] < b[i])
+					return true;
+				else
+					return false;
+			}
 		}
-		if (a[i] < b[i] && a[0] == 1)
-			return false;
 	}
 	return true;
 }
