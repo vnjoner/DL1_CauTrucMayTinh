@@ -19,9 +19,12 @@ public:
 
 	void BinToQfloat(bool *bit);
 	void QfloatToBin(bool *bit);
+
 };
 string BinToDec(bool *bit);
 bool *DecToBin(string dec);
 
 void ScanQfloat(Qfloat &x);
 void PrintQfloat(Qfloat x);
+
+void QfloatFile(ifstream &is, ofstream &os);
