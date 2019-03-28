@@ -20,6 +20,63 @@ Qint::Qint() {
 	a4 = 0;
 }
 
+Qint Qint::operator * (Qint x) {
+	bool a[128] = { 0 };
+	bool b[128] = { 0 };
+	this->QintToBinary(a);
+	x.QintToBinary(b);
+
+	bool check = (a[0] == b[0]) ? 0 : 1;// neu a[0] b[0] cung dau -> 1 nguoc lai -> 0
+
+	a[0] = 0;//chuyen a ve so duong
+	b[0] = 0;//chuyen b ve so duong
+
+	Qint kq;
+	Qint b1;
+	Qint b2;
+
+	Qint so0;
+	Qint so1;
+
+	bool boolso1[128] = { 0 };
+	boolso1[127] = 1;//tuong ung vs dec = 1
+
+	so1.BinToQint(boolso1);
+
+	b1.BinToQint(a);
+	b2.BinToQint(b);
+
+	Qint dummy;
+	Qint add;
+	if (b1 > b2) {//so be hon thi dan = dummy, so lon hon dan = add
+		dummy = b2;
+		add = b1;
+	}
+	else {
+		dummy = b1;
+		add = b1;
+	}
+
+	//tru cho toi khi dummy <= 0
+	//1 lan tru dummy la kq = kq + add
+	//thuat toan: nhan cung la cong
+	while (dummy > so0) {
+		kq = kq + add;
+		dummy = dummy - so1;
+	}
+
+	bool kqbool[128] = { 0 };
+	kq.QintToBinary(kqbool);
+	kqbool[0] = check;//đặt dấu cho kq
+
+	kq.BinToQint(kqbool);
+
+	return kq;
+
+
+}
+
+
 Qint::~Qint() {
 
 }
@@ -122,7 +179,7 @@ bool* StringDecToBin(string dec) {
         return kq;
     }
     else {
-        while (dec != "0") {//khi dang khac 0
+        while (dec != "") {//khi dang khac 0
             kqString = CHECKTanCungLe(dec) + kqString;
             dec = chiaHai(dec);
         }

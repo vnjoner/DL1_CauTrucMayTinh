@@ -8,27 +8,15 @@ using namespace std;
 class Qint
 {
 private:
-	int a1, a2, a3, a4;
+	unsigned int a1, a2, a3, a4;
 public:
-	//hung
 	Qint();
 	~Qint() {};
-	Qint operator = (Qint x) {
-		if (this == &x)
-			return *this;
-		else {
-			this->a1 = x.a1;
-			this->a2 = x.a2;
-			this->a3 = x.a3;
-			this->a4 = x.a4;
-		}
-		return *this;
-	}
+	Qint operator = (Qint x);
 
-	// binh
 	Qint operator+(Qint x);
 	Qint operator-(Qint x);
-	//Qint operator*(Qint x);// hung
+	Qint operator*(Qint x);
 
 	//Qint operator / (Qint x);// quang huy
 
@@ -38,13 +26,11 @@ public:
 	bool operator > (Qint x);
 	bool operator < (Qint x);
 
-	// van huy
 	Qint operator &(Qint x);
 	Qint operator | (Qint x);
 	Qint operator ^(Qint x);
 	Qint operator ~();
 
-	//hung
 	Qint operator <<(Qint a);
 	Qint operator >> (Qint a);
 	Qint Qint_rol();
@@ -60,14 +46,13 @@ public:
 
 
 void ScanQint(Qint &x) {};
-//void PrintQint(Qint x) {};// anh huy
 void QintFile(ifstream &is, ofstream &os);
 
 
 //nhap
-bool* StringDecToBin(string dec);//binh xong
-bool* StringHexToBin(char* hex);// anh huy
+bool* StringDecToBin(string dec);
+bool* StringHexToBin(char* hex);
 
-								//xuat
-char * BinToHex(bool *bit);//anh huy
-string BinToDec(bool *bit); //vanhuy
+//xuat
+char * BinToHex(bool *bit);
+string BinToDec(bool *bit);
