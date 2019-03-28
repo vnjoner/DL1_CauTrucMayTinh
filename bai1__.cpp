@@ -25,6 +25,78 @@ Qint::~Qint() {
 
 }
 
+bool operator == (Qint x)
+{
+	bool a[128] = { 0 };
+	bool b[128] = { 0 };
+	this->QinttoBinary(a);
+	x.QinttoBinary(b);
+	for (int i = 127; i >= 0; i--) {
+		if (a[i] == b[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+bool operator >= (Qint x)
+{
+	bool a[128] = { 0 };
+	bool b[128] = { 0 };
+	this->QinttoBinary(a);
+	x.QinttoBinary(b);
+	for (int i = 127; i >= 0; i--) {
+		if (a[i] != b[i]) {
+			if (a[i] < b[i])
+				return false;
+		}
+	}
+	return true;
+}
+bool operator <= (Qint x)
+{
+	bool a[128] = { 0 };
+	bool b[128] = { 0 };
+	this->QinttoBinary(a);
+	x.QinttoBinary(b);
+	for (int i = 127; i >= 0; i--) {
+		if (a[i] != b[i]) {
+			if (a[i] > b[i])
+				return false;
+		}
+	}
+	return true;
+}
+bool operator > (Qint x)
+{
+	if (*this == x) return false;
+	bool a[128] = { 0 };
+	bool b[128] = { 0 };
+	this->QinttoBinary(a);
+	x.QinttoBinary(b);
+	for (int i = 127; i >= 0; i--) {
+		if (a[i] != b[i]) {
+			if (a[i] < b[i])
+				return false;
+		}
+	}
+	return true;
+}
+bool operator < (Qint x)
+{
+	if (*this == x) return false;
+	bool a[128] = { 0 };
+	bool b[128] = { 0 };
+	this->QinttoBinary(a);
+	x.QinttoBinary(b);
+	for (int i = 127; i >= 0; i--) {
+		if (a[i] != b[i]) {
+			if (a[i] > b[i])
+				return false;
+		}
+	}
+	return true;
+}
+
 /* ham chuyen doi string index kieu (char*) sang kieu int*/
 int getBit(const string &s, int index) {
 	if (index >= 0) {
@@ -727,12 +799,9 @@ void QintFile(ifstream &is, ofstream &os) {
 			kq = b1;
 		}
 
-		b1.PrintQint();//in bộ nhớ của opr1
-		b2.PrintQint();//in bộ nhớ của opr2
-
 		bool kqbit[128] = { 0 };
 		kq.QintToBinary(kqbit);
-		kq.PrintQint();//in bộ nhớ của Qint
+
 		os.open("output.txt", ios::out);
 
 		if ((p1[c] == "2" && p2[c] == "") | p2[c] == "2") {
