@@ -399,13 +399,20 @@ void daobit(string &s) {
 
 Qint Qint::operator+(Qint x) {
 
+    if (*this < 0){
+        return x - *this;
+    }
+    if (x < 0){
+        return *this - x;
+    }
+    
 	/* operator dung ham cong ben ngoai, nhan vao 2 string, tra ve 1 string, sau do chuyen sang qint */
 
 	Qint kq;
 
 	string s1 = tobinary(a4) + tobinary(a3) + tobinary(a2) + tobinary(a1);
 	string s2 = tobinary(x.a4) + tobinary(x.a3) + tobinary(x.a2) + tobinary(x.a1);
-
+    
 	string kqstring = addbinary(s1, s2); // tinh toan
 
 
