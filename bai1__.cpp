@@ -171,6 +171,11 @@ string chiaHai(string s) {
 bool* StringDecToBin(string dec) {
     string kqString = "";
     bool *kq;
+    int flag = 0;
+    if (dec[0] == '-'){
+        flag = 1;
+        dec.erase(dec.begin());
+    }
     if (dec == "0") {//neu bang 0 thi ngung
         kq = new bool[128];
         for (int i = 0; i < 128; i++){
@@ -187,6 +192,9 @@ bool* StringDecToBin(string dec) {
     kq = new bool[128];
     while (kqString.size() < 128){
         kqString = "0" + kqString;
+    }
+    if (flag == 1){
+        kqString[0] = 1;
     }
     for (int i = (int)kqString.size() - 1; i >= 0; i--) {
         kq[i] = kqString[i] - '0';
