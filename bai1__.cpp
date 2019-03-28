@@ -1,4 +1,4 @@
-﻿#include "bai1.h"
+#include "bai1.h"
 using namespace std;
 
 
@@ -428,30 +428,63 @@ Qint Qint::operator+(Qint x) {
 
 
 Qint Qint::operator-(Qint x) {
-
-	/* operator - theo quy tac chuyen so thu 2 sang dang bu` 2's sau do thuc hien phep cong nhu thuong le*/
-	/* cac buoc thuc hien giong nhu operator + */
-
-	Qint kq;
-
-	string s1 = tobinary(a4) + tobinary(a3) + tobinary(a2) + tobinary(a1);
-	string s2 = tobinary(x.a4) + tobinary(x.a3) + tobinary(x.a2) + tobinary(x.a1);
-
-	//a+(~b + 1)
-	daobit(s2); //dao bit b
-	s2 = addbinary(s2, "1"); //cong them 1 thanh dang bu 2
-
-	string kqstring = addbinary(s1, s2); //cong nhau
-	kqstring.erase(kqstring.begin()); // xoa bit dau = kq
-
-	bool *kqbool = new bool[kqstring.size()];
-
-	for (int i = 0; i < kqstring.size(); i++) {
-		kqbool[i] = kqstring[i] - '0';
-	}
-
-	kq.BinToQint(kqbool);
-	return kq;
+    //
+    //    /* operator - theo quy tac chuyen so thu 2 sang dang bu` 2's sau do thuc hien phep cong nhu thuong le*/
+    //    /* cac buoc thuc hien giong nhu operator + */
+    //
+    Qint kq;
+    
+    string s1 = toBinary(a4) + toBinary(a3) + toBinary(a2) + toBinary(a1);
+    string s2 = toBinary(x.a4) + toBinary(x.a3) + toBinary(x.a2) + toBinary(x.a1);
+    //
+    //
+    bool *kqbool;
+    if (x > *this){ // tru am thi nguoc lai
+        DaoBit(s2);
+        
+        s2 = addBinary(s2, "1");
+        
+        string kqstring = addBinary(s1, s2); // tinh toan
+        
+        string somot("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
+        
+        kqstring = addBinary(kqstring, somot);
+        DaoBit(kqstring);
+        kqstring[0] = '1';
+        
+        kqbool = new bool[128];//mang kq
+        
+        //
+        for (int i = 128 - 1; i >= 0; i--) {
+            kqbool[i] = kqstring[i] - '0';//chuyen thanh char
+        }
+    }
+    else if (*this == x){//tru bang nhau mang kq chac chan se = 0
+        kqbool = new bool[128];//mang kq
+        
+        for (int i = 0; i < 128; i++) {
+            kqbool[i] = 0;
+        }
+    }
+    else { //x be hon *this thi tru binh thuong
+        DaoBit(s2);
+        
+        s2 = addBinary(s2, "1");
+        //
+        string kqstring = addBinary(s1, s2);
+        
+        
+        kqbool = new bool[128];//mang kq
+        
+        //
+        for (int i = (int)kqstring.size() - 1; i >= 0; i--) {
+            kqbool[i] = kqstring[i] - '0';//chuyen thanh char
+        }
+    }
+    
+    kq.BinToQint(kqbool);
+    delete[] kqbool;
+    return kq;
 }
 
 bool *StringHexToBin(char *hex)
