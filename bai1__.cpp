@@ -860,8 +860,8 @@ void QintFile(ifstream &is, ofstream &os) {
 			kq = b1 + b2;
 		if (sign[c] == "-")
 			kq = b1 - b2;
-		//if (sign[c] == "*")
-		//	kq = b1 * b2;
+		if (sign[c] == "*")
+			kq = b1 * b2;
 		//if (sign[c] == "/")
 		//	kq = b1 / b2;
 		if (sign[c] == "~")
