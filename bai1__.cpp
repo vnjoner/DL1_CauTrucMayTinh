@@ -112,23 +112,29 @@ string chiaHai(string s) {
 /*    ham CONVERT he 10 -> 2    */
 
 bool* StringDecToBin(string dec) {
-	string kqString = "";
-	if (dec == "0") {//neu bang 0 thi ngung
-		return 0;
-	}
-	else {
-		while (dec != "") {//khi dang khac 0
-			kqString = CHECKTanCungLe(dec) + kqString;
-			dec = chiaHai(dec);
-		}
-	}
-	bool *kq = new bool[128];
-	memset(kq, 0, 128);
-
-	for (int i = 0, j = 127; i < kqString.size(); i++) {
-		kq[127 - i] = kqString[kqString.size() - 1 - i] - '0';
-	}
-	return kq;
+    string kqString = "";
+    bool *kq;
+    if (dec == "0") {//neu bang 0 thi ngung
+        kq = new bool[128];
+        for (int i = 0; i < 128; i++){
+            kq[i] = 0;
+        }
+        return kq;
+    }
+    else {
+        while (dec != "0") {//khi dang khac 0
+            kqString = CHECKTanCungLe(dec) + kqString;
+            dec = chiaHai(dec);
+        }
+    }
+    kq = new bool[128];
+    while (kqString.size() < 128){
+        kqString = "0" + kqString;
+    }
+    for (int i = (int)kqString.size() - 1; i >= 0; i--) {
+        kq[i] = kqString[i] - '0';
+    }
+    return kq;
 }
 
 void Qint::QintToBinary(bool bit[]) {// đổi từ 4 int ra dãy nhị phân, lưu thông qua tham chiếu bit[],
