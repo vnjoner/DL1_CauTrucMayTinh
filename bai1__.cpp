@@ -1,11 +1,5 @@
-#pragma once
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-using namespace std;
+#include "bai1.h"
 
-#include "bai1.h";
 
 Qint Qint::operator = (Qint x) {
 	if (this == &x)
@@ -51,7 +45,7 @@ bool Qint::operator <= (Qint x)
 }
 bool Qint::operator > (Qint x)
 {
-	if (*this < x | !(*this == x))
+	if (*this < x && !(*this == x))
 		return false;
 	return true;
 }
@@ -60,8 +54,17 @@ bool Qint::operator < (Qint x)
 	if (*this == x) return false;
 	bool a[128] = { 0 };
 	bool b[128] = { 0 };
-	this->QintToBinary(a);
 	x.QintToBinary(b);
+	this->QintToBinary(a);
+
+
+	for (int i = 0; i < 128; i++)
+		cout << a[i];
+	cout << endl;
+	for (int i = 0; i < 128; i++)
+		cout << b[i];
+	cout << endl;
+
 	for (int i = 1; i < 128; i++) {
 		if (a[i] > b[i] && a[0] == 0) {
 			return false;
@@ -139,74 +142,59 @@ bool* StringDecToBin(string dec) {
 void Qint::QintToBinary(bool bit[]) {// đổi từ 4 int ra dãy nhị phân, lưu thông qua tham chiếu bit[],
 									 //vd  123.32.2.12 -> bit[]={0,0,1,1,0,0,0,0,........./0,0,1,0,0,0,0,0......./0,0,0,0,0,1,0,0......../,1,1,0,1,1,1,1,0........}
 	int i = 127;
-	int b1 = abs(a1), b2 = abs(a2), b3 = abs(a3), b4 = abs(a4);
+	int b1 = a1, b2 = a2, b3 = a3, b4 = a4;
 	while (b1 != 0) {
 		bit[i--] = (b1 % 2 == 0 ? 0 : 1);
 		b1 /= 2;
 	}
-	if (a1 < 0)
-		bit[96] = 1;
+
 	i = 95;
 	while (b2 != 0) {
 		bit[i--] = (b2 % 2 == 0 ? 0 : 1);
 		b2 /= 2;
 	}
-	if (a2 < 0)
-		bit[64] = 1;
 	i = 63;
 	while (b3 != 0) {
 		bit[i--] = (b3 % 2 == 0 ? 0 : 1);
 		b3 /= 2;
 	}
-	if (a3 < 0)
-		bit[32] = 1;
 	i = 31;
 	while (b4 != 0) {
 		bit[i--] = (b4 % 2 == 0 ? 0 : 1);
 		b4 /= 2;
 	}
-	if (a4 < 0)
-		bit[0] = 1;
 }
 
 void Qint::BinToQint(bool * bit)// dùng để lưu dãy nhị phân vào trong 4 int
 {
 	this->a4 = 0;
-	for (int i = 1; i < 32; i++)
+	for (int i = 0; i < 32; i++)
 	{
 		if (bit[i] == 1) {
 			this->a4 += pow(2, 31 - i);
 		}
 	}
-	if (bit[0] == 1)
-		this->a4 *= -1;
 	this->a3 = 0;
-	for (int i = 33; i < 64; i++)
+	for (int i = 32; i < 64; i++)
 	{
 		if (bit[i] == 1) {
 			this->a3 += pow(2, 63 - i);
 		}
 	}
-	if (bit[32] == 1)
-		this->a3 *= -1;
 	this->a2 = 0;
-	for (int i = 65; i < 96; i++)
+	for (int i = 64; i < 96; i++)
 	{
 		if (bit[i] == 1) {
 			this->a2 += pow(2, 95 - i);
 		}
 	}
-	if (bit[64] == 1)
-		this->a2 *= -1;
 	this->a1 = 0;
-	for (int i = 97; i < 128; i++)
+	for (int i = 96; i < 128; i++)
 	{
 		if (bit[i] == 1) {
 			this->a1 += pow(2, 127 - i);
 		}
 	}
-	if (bit[96] == 1)
-		this->a1 *= -1;
 }
 Qint Qint::operator&(Qint x)
 {
@@ -391,7 +379,6 @@ Qint Qint::Qint_ror() {
 	return *this;
 }
 
-
 string tobinary(unsigned long long n) {
 	string kq;
 	while (n != 0) {
@@ -426,8 +413,9 @@ string addbinary(string a, string b) {
 		kq = (char)(s % 2 + '0') + kq;
 		s /= 2;
 		index--;
-		if (kq.size() >= 128)
+		if (kq.size() >= 128) {
 			break;
+		}
 	}
 	return kq;
 }
@@ -486,6 +474,8 @@ Qint Qint::operator-(Qint x) {
 	//
 	//
 	bool *kqbool;
+
+
 	if (x > *this) { // tru am thi nguoc lai
 		daobit(s2);
 
@@ -502,7 +492,7 @@ Qint Qint::operator-(Qint x) {
 		kqbool = new bool[128];//mang kq
 
 							   //
-		for (int i = 128 - 1; i >= 0; i--) {
+		for (int i = 127; i >= 0; i--) {
 			kqbool[i] = kqstring[i] - '0';//chuyen thanh char
 		}
 	}
@@ -531,6 +521,8 @@ Qint Qint::operator-(Qint x) {
 
 	kq.BinToQint(kqbool);
 	delete[] kqbool;
+
+	kq.PrintQint();
 	return kq;
 }
 
@@ -774,8 +766,13 @@ void QintFile(ifstream &is, ofstream &os) {
 			kq = b1;
 		}
 
+		b1.PrintQint();
+		b2.PrintQint();
+
 		bool kqbit[128] = { 0 };
 		kq.QintToBinary(kqbit);
+
+		kq.PrintQint();
 
 		os.open("output.txt", ios::out);
 
@@ -803,6 +800,3 @@ void QintFile(ifstream &is, ofstream &os) {
 
 	return;
 }
-
-
-
