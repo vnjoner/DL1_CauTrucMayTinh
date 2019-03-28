@@ -27,58 +27,27 @@ Qint::~Qint() {
 
 bool operator == (Qint x)
 {
-	bool a[128] = { 0 };
-	bool b[128] = { 0 };
-	this->QinttoBinary(a);
-	x.QinttoBinary(b);
-	for (int i = 127; i >= 0; i--) {
-		if (a[i] == b[i]) {
-			return true;
-		}
-	}
+	if (this->a1 == x.a1 && this->a2 == x.a2 && this->a3 == x.a3 && this->a4 == x.a4)
+		return true;
 	return false;
 }
 bool operator >= (Qint x)
 {
-	bool a[128] = { 0 };
-	bool b[128] = { 0 };
-	this->QinttoBinary(a);
-	x.QinttoBinary(b);
-	for (int i = 127; i >= 0; i--) {
-		if (a[i] != b[i]) {
-			if (a[i] < b[i])
-				return false;
-		}
+	if (*this < x) {
+		return false;
 	}
 	return true;
 }
 bool operator <= (Qint x)
 {
-	bool a[128] = { 0 };
-	bool b[128] = { 0 };
-	this->QinttoBinary(a);
-	x.QinttoBinary(b);
-	for (int i = 127; i >= 0; i--) {
-		if (a[i] != b[i]) {
-			if (a[i] > b[i])
-				return false;
-		}
-	}
+	if ((*this > Qint))
+		return false;
 	return true;
 }
 bool operator > (Qint x)
 {
-	if (*this == x) return false;
-	bool a[128] = { 0 };
-	bool b[128] = { 0 };
-	this->QinttoBinary(a);
-	x.QinttoBinary(b);
-	for (int i = 127; i >= 0; i--) {
-		if (a[i] != b[i]) {
-			if (a[i] < b[i])
-				return false;
-		}
-	}
+	if (*this < x || !(*this == x))
+		return false;
 	return true;
 }
 bool operator < (Qint x)
@@ -88,11 +57,12 @@ bool operator < (Qint x)
 	bool b[128] = { 0 };
 	this->QinttoBinary(a);
 	x.QinttoBinary(b);
-	for (int i = 127; i >= 0; i--) {
-		if (a[i] != b[i]) {
-			if (a[i] > b[i])
-				return false;
+	for (int i = 1; i < 128; i++) {
+		if (a[i] > b[i] && a[0] == 0) {
+			return false;
 		}
+		if (a[i] < b[i] && a[0] == 1)
+			return false;
 	}
 	return true;
 }
@@ -471,20 +441,13 @@ void daobit(string &s) {
 
 Qint Qint::operator+(Qint x) {
 
-    if (*this < 0){
-        return x - *this;
-    }
-    if (x < 0){
-        return *this - x;
-    }
-    
 	/* operator dung ham cong ben ngoai, nhan vao 2 string, tra ve 1 string, sau do chuyen sang qint */
 
 	Qint kq;
 
 	string s1 = tobinary(a4) + tobinary(a3) + tobinary(a2) + tobinary(a1);
 	string s2 = tobinary(x.a4) + tobinary(x.a3) + tobinary(x.a2) + tobinary(x.a1);
-    
+
 	string kqstring = addbinary(s1, s2); // tinh toan
 
 
