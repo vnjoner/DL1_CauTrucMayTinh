@@ -11,9 +11,9 @@ Qfloat::Qfloat() {
 Qfloat::~Qfloat() {
 }
 
-Qfloat::operator=(const Qfloat &x) {
+Qfloat Qfloat::operator = (const Qfloat &x) {
 	if (this == &x) {
-		return *this
+		return *this;
 	}
 	this->nguyen = x.nguyen;
 	this->tp4 = x.tp4;
@@ -124,6 +124,7 @@ string chiaHai(string s)
     
     int index = 0;
     int temp = s[index] - '0';
+	cout << s << endl;
     while (temp < 2)
         temp = temp * 10 + (s[++index] - '0');
     
@@ -155,7 +156,7 @@ string StringDecToBin(string dec){
         return 0;
     }
     else {
-        while (dec != "0"){//khi dang khac 0
+        while (dec != ""){//khi dang khac 0
             kqString = CHECKTanCungLe(dec) + kqString;
             dec = chiaHai(dec);
         }
@@ -207,44 +208,6 @@ string nhanHai(string decFloat){
     reverse(kq.begin(), kq.end());
     kq.insert(1, ".");
     
-    return kq;
-}
-
-bool *DecToBin(string sFLOAT){
-    string i_Part = "";//phan nguyen
-    string f_Part = "";//phan cham dong
-    
-    for (int i = 0; i < (int)sFLOAT.find_first_of("."); i++){//truoc dau .
-        i_Part += sFLOAT[i];
-    }
-    //re-use ham stringdectobin ben Qint
-    string bin_i_part = StringDecToBin(i_Part);//chuyen nguyen sang bin
-    
-    for (int i = (int)sFLOAT.find_first_of("."); i < sFLOAT.size(); i++){
-        f_Part += sFLOAT[i];//sau dau .
-    }
-    
-    f_Part = "0" + f_Part;//ra dang 0.xx
-    
-    string bin_f_part = "";
-    //chuyen tp sang bin
-    while (f_Part != "0"){
-        f_Part = nhanHai(f_Part);
-        bin_f_part += f_Part[0];
-        if (f_Part[0] == '1'){
-            f_Part[0] = '0';
-        }
-        if (bin_f_part.size() == 112){
-            break;
-        }
-    }
-    
-    string kqreal = bin_i_part + bin_f_part; //kq string
-    //chuyen kqstring qua bool
-    bool *kq = new bool[128];//convert into bin
-    for (int i = 0; i < 128; i++){
-        kq[i] = kqreal[i] - '0';
-    }
     return kq;
 }
 
@@ -305,111 +268,155 @@ string BinToDec(bool * bit)
 		str = "+" + str;
 	return str;
 }
+void QfloatFile(ifstream &is, ofstream &os) {
+	string s[100];
+	string opr1[100];
+	string p1[100], p2[100];
+	int z = 0;
+	is.open("input.txt", ios::in);
+
+	while (!is.eof()) {
+		getline(is, s[z]);
+		z++;
+	}
+	is.close();
+
+	for (int c = 0; c < z; c++) {
+		int i;
+		if (s[c][0] == '2' && s[c][1] == ' ') {//nhan vao la he 2
+			p1[c] = s[c][0];
+			if (s[c][3] == ' ' && s[c][2] == '2') {//dau ra la he 2
+				p2[c] = s[c][2];
+				i = 4;
+			}
+			else {
+				if (s[c][1] == ' ' && s[c][2] == '1' && s[c][4] == ' ' && s[c][3] == '0') {//dau ra la he 10
+					p2[c] = s[c][2];
+					p2[c] += s[c][3];
+					i = 5;
+				}
+				else {// dau ra khong ghi thong tin
+					i = 2;
+				}
+			}
+		}
+		if (s[c][0] == '1' && s[c][2] == ' ') { //nhan vao la he 10
+			p1[c] += s[0][0];
+			p1[c] += s[c][1];
+			if (s[c][2] == ' ' && s[c][3] == '2' && s[c][4] == ' ') {// dau ra la he 2
+				p2[c] += s[c][3];
+				i = 5;
+			}
+			else {
+				if (s[c][2] == ' ' && s[c][5] == ' ' && s[c][3] == '1' &&  s[c][3] == '0') {//dau ra la he 10
+					p2[c] += s[c][3];
+					p2[c] += s[c][2];
+					i = 6;
+				}
+				else {// dau ra khong ghi thong tin
+					i = 3;
+				}
+			}
+		}
 
 
+		for (i; s[c][i] != ' ' && i < s[c].length(); i++) {// add opr1
+			opr1[c] += s[c][i];
+		}
+	}
 
-//phan comment duoi la fix operator bai 1
-//string toBinary(unsigned long long n) {
-//    string kq;
-//    while (n != 0) {
-//        kq = (n % 2 == 0 ? "0" : "1") + kq;
-//        n /= 2;
-//    }
-//    while (kq.size() < 32){
-//        kq = "0" + kq;
-//    }
-//    return kq;
-//}
-//
-///*   ham cong hai so he 2, tra ve string   */
-//string addBinary(string a, string b) {
-//    while (a.size() > b.size()) { // them so 0 cho ngang size
-//        b = "0" + b;
-//    }
-//
-//    while (a.size() < b.size()) { //them so 0 cho ngang size
-//        a = "0" + a;
-//    }
-//
-//    //lay index = length max vi index string kq se chay tu max ve 0
-//    int index = (int)a.size() - 1 > (int)b.size() - 1 ? (int)a.size() - 1 : (int)a.size() - 1;
-//    int s = 0;
-//
-//    string kq = "";// khoi tao bien luu ket qua
-//
-//    while (index > 0 || s == 1) {
-//        //thuc hien tinh toan va` tinh carry tu` phan tu indexth -> 0th
-//        s = s + (getBit(a, index) + getBit(b, index));
-//        kq = (char)(s % 2 + '0') + kq;
-//        s /= 2;
-//        index--;
-//    }
-//    return kq;
-//}
-//
-///*  ham dao bit tu 0 -> 1, va nguoc lai, 1 -> 0 (operator -)  */
-//void DaoBit(string &s) {
-//    for (int i = 0; i < s.size(); i++) {
-//        if (s[i] == '1') {
-//            s[i] = '0';
-//        }
-//        else if (s[i] == '0') {
-//            s[i] = '1';
-//        }
-//    }
-//}
-//
-//Qint Qint::operator+(Qint x) {
-//
-//    /* operator dung ham cong ben ngoai, nhan vao 2 string, tra ve 1 string, sau do chuyen sang Qint */
-//
-//    Qint kq;
-//
-//    string s1 = toBinary(a4) + toBinary(a3) + toBinary(a2) + toBinary(a1);
-//    string s2 = toBinary(x.a4) + toBinary(x.a3) + toBinary(x.a2) + toBinary(x.a1);
-//
-//    string kqstring = addBinary(s1, s2); // tinh toan
-//
-//    bool *kqbool = new bool[kqstring.size()];//mang kq
-//
-//    for (int i = 0; i < kqstring.size(); i++) {
-//        kqbool[i] = kqstring[i] - '0';//chuyen thanh char
-//    }
-//
-//    kq.BinToQint(kqbool);
-//    return kq;
-//}
-//
-//
-//Qint Qint::operator-(Qint x) {
-//
-//    /* operator - theo quy tac chuyen so thu 2 sang dang bu` 2's sau do thuc hien phep cong nhu thuong le*/
-//    /* cac buoc thuc hien giong nhu operator + */
-//
-//    Qint kq;
-//
-//    string s1 = toBinary(a4) + toBinary(a3) + toBinary(a2) + toBinary(a1);
-//    string s2 = toBinary(x.a4) + toBinary(x.a3) + toBinary(x.a2) + toBinary(x.a1);
-//
-//    //a+(~b + 1)
-//    DaoBit(s2); //dao bit b
-//    s2 = addBinary(s2, "1"); //cong them 1 thanh dang bu 2
-//
-//    string kqstring = addBinary(s1, s2); //cong nhau
-//    kqstring.erase(kqstring.begin()); // xoa bit dau = kq
-//
-//    bool *kqbool = new bool[kqstring.size()];
-//
-//    for (int i = 0; i < kqstring.size(); i++) {
-//        kqbool[i] = kqstring[i] - '0';
-//    }
-//
-//    kq.BinToQint(kqbool);
-//    return kq;
-//}
+	Qfloat kq;
+	os.open("output.txt", ios::out);
+	for (int c = 0; c < z; c++) {
+		if (p1[c] == "2") {//nhan vao la binary
+			bool bit1[128] = { 0 };
+			for (int j = 0; j < opr1[c].length(); j++) {//string binary -> bool binary
+				bit1[127 - j] = opr1[c][opr1[c].length() - 1 - j] - '0';
+			}
+			kq.BinToQfloat(bit1);// bin -> Qfloat
+		}
 
+		if (p1[c] == "10") {// nhan vao la dec
+			bool *bit1 = DectoBin(opr1[c]);//dec -> bin
+			kq.BinToQfloat(bit1);//bin -> Qfloat
+		}
 
-//ENDS HERE
+		bool kqbit[128] = { 0 };
+		kq.QfloatToBin(kqbit);//kq tu Qloat -> bin
+		
 
+		if ((p1[c] == "2" && p2[c] == "") | p2[c] == "2") {
+			for (int i = 0; i < 128; i++)
+				os << kqbit[i];
+		}
 
+		if ((p1[c] == "10" && p2[c] == "") | p2[c] == "10") {
+			string kqdec = BinToDec(kqbit);
+			os << kqdec;
+		}
 
+		os << endl;
+	}
+
+	os.close();
+
+	return;
+}
+
+bool * DectoBin(string Float) {
+	bool * bit = new bool[128];
+	for (int i = 0; i < 128; i++)
+	{
+		bit[i] = 0;
+	}
+	int index = 0;
+	bool dau = 0;
+	if (Float[0] == '-')
+		bit[0] = 1;
+	for (; index < Float.size(); index++)
+	{
+		if (Float[index] == '.')
+			break;
+	}
+	unsigned int temp = 0;
+	for (int i = 0; i <= index; i++) {
+		temp = temp * 10 + (Float[index] - '0');
+	}
+	int index1 = 15;
+	while (temp != 0) {
+		bit[index1] = temp % 10;
+		temp /= 10;
+		index1--;
+	}
+	int temp1[50] = { 0 };
+	index1 = 0;
+	for (int i = index + 1; i < Float.size(); i++)
+	{
+		temp1[index1] = Float[i] - '0';
+	}
+	int memo = 0;
+	index1 = 16;
+	bool check = 0;
+	do {
+		for (int i = 49; i >= 0; i--)
+		{
+			int d = temp1[i];
+			temp1[i] = (temp1[i] * 2 + memo) % 10;
+			memo = (d * 2 + memo) / 10;
+		}
+		bit[index1] = memo;
+		index1++;
+		check = 0;
+		for (int i = 49; i >= 0; i--)
+		{
+			if (temp1[i] != 0) {
+				check = 1;
+			}
+		}
+	} while (check == 1);
+	for (int i = 0; i < 128; i++) {
+		cout << bit[i];
+	}
+	cout << endl;
+	return bit;
+}

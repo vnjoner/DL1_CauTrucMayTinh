@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include <iostream>
+#include <fstream>
+#include <string>
 using namespace std;
 
 //phần thập phân lưu theo tp4 tp3 tp2 tp1 (vd 100 2 130 100 => tp4 = 100, tp2 = 2, tp3 = 130, tp4 = 100 )
@@ -15,14 +17,14 @@ public:
 
 	Qfloat();
 	~Qfloat();
-	Qfloat operator =(Qfloat x);
+	Qfloat operator =(const Qfloat &x);
 
 	void BinToQfloat(bool *bit);
 	void QfloatToBin(bool *bit);
 
 };
 string BinToDec(bool *bit);
-bool *DecToBin(string dec);
+bool *DectoBin(string dec);
 
 void ScanQfloat(Qfloat &x);
 void PrintQfloat(Qfloat x);
