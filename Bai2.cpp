@@ -247,6 +247,101 @@ bool *DecToBin(string sFLOAT){
     }
     return kq;
 }
+void QfloatFile(ifstream &is, ofstream &os) {
+	string s[100];
+	string opr1[100];
+	string p1[100], p2[100];
+	int z = 0;
+	is.open("input.txt", ios::in);
+
+	while (!is.eof()) {
+		getline(is, s[z]);
+		z++;
+	}
+	is.close();
+
+	for (int c = 0; c < z; c++) {
+		int i;
+		if (s[c][0] == '2' && s[c][1] == ' ') {//nhan vao la he 2
+			p1[c] = s[c][0];
+			if (s[c][3] == ' ' && s[c][2] == '2') {//dau ra la he 2
+				p2[c] = s[c][2];
+				i = 4;
+			}
+			else {
+				if (s[c][1] == ' ' && s[c][2] == '1' && s[c][4] == ' ' && s[c][3] == '0') {//dau ra la he 10
+					p2[c] = s[c][2];
+					p2[c] += s[c][3];
+					i = 5;
+				}
+				else {// dau ra khong ghi thong tin
+					i = 2;
+				}
+			}
+		}
+		if (s[c][0] == '1' && s[c][2] == ' ') { //nhan vao la he 10
+			p1[c] += s[0][0];
+			p1[c] += s[c][1];
+			if (s[c][2] == ' ' && s[c][3] == '2' && s[c][4] == ' ') {// dau ra la he 2
+				p2[c] += s[c][3];
+				i = 5;
+			}
+			else {
+				if (s[c][2] == ' ' && s[c][5] == ' ' && s[c][3] == '1' &&  s[c][3] == '0') {//dau ra la he 10
+					p2[c] += s[c][3];
+					p2[c] += s[c][2];
+					i = 6;
+				}
+				else {// dau ra khong ghi thong tin
+					i = 3;
+				}
+			}
+		}
+
+
+		for (i; s[c][i] != ' ' && i < s[c].length(); i++) {// add opr1
+			opr1[c] += s[c][i];
+		}
+	}
+
+	Qfloat kq;
+	os.open("output.txt", ios::out);
+
+	for (int c = 0; c < z; c++) {
+		if (p1[c] == "2") {//nhan vao la binary
+			bool bit1[128] = { 0 };
+			for (int j = 0; j < opr1[c].length(); j++) {//string binary -> bool binary
+				bit1[127 - j] = opr1[c][opr1[c].length() - 1 - j] - '0';
+			}
+			kq.BinToQfloat(bit1);// bin -> Qfloat
+		}
+
+		if (p1[c] == "10") {// nhan vao la dec
+			bool *bit1 = DecToBin(opr1[c]);//dec -> bin
+			kq.BinToQfloat(bit1);//bin -> Qfloat
+		}
+
+		bool kqbit[128] = { 0 };
+		kq.QfloatToBin(kqbit);//kq tu Qloat -> bin
+		os.open("output.txt", ios::out);
+
+		if ((p1[c] == "2" && p2[c] == "") | p2[c] == "2") {
+			for (int i = 0; i < 128; i++)
+				os << kqbit[i];
+		}
+
+		if ((p1[c] == "10" && p2[c] == "") | p2[c] == "10") {
+			string kqdec = BinToDec(kqbit);
+			os << kqdec;
+		}
+
+		os << endl;
+	}
+
+	os.close();
+
+	return;
+}
 //phan comment duoi la fix operator bai 1
 //string toBinary(unsigned long long n) {
 //    string kq;
