@@ -187,29 +187,37 @@ string chiaHai(string s) {
 /*    ham CONVERT he 10 -> 2    */
 
 bool* StringDecToBin(string dec) {
-    string kqString = "";
-    bool *kq;
-    if (dec == "0") {//neu bang 0 thi ngung
-        kq = new bool[128];
-        for (int i = 0; i < 128; i++){
-            kq[i] = 0;
-        }
-        return kq;
-    }
-    else {
-        while (dec != "") {//khi dang khac 0
-            kqString = CHECKTanCungLe(dec) + kqString;
-            dec = chiaHai(dec);
-        }
-    }
-    kq = new bool[128];
-    while (kqString.size() < 128){
-        kqString = "0" + kqString;
-    }
-    for (int i = (int)kqString.size() - 1; i >= 0; i--) {
-        kq[i] = kqString[i] - '0';
-    }
-    return kq;
+	string kqString = "";
+	bool *kq;
+	int flag = 0;
+	if (dec[0] == '-') {
+		flag = 1;
+		dec.erase(dec.begin());
+	}
+	if (dec == "0") {//neu bang 0 thi ngung
+		kq = new bool[128];
+		for (int i = 0; i < 128; i++) {
+			kq[i] = 0;
+		}
+		return kq;
+	}
+	else {
+		while (dec != "") {//khi dang khac 0
+			kqString = CHECKTanCungLe(dec) + kqString;
+			dec = chiaHai(dec);
+		}
+	}
+	kq = new bool[128];
+	while (kqString.size() < 128) {
+		kqString = "0" + kqString;
+	}
+	if (flag == 1) {
+		kqString[0] = 1;
+	}
+	for (int i = (int)kqString.size() - 1; i >= 0; i--) {
+		kq[i] = kqString[i] - '0';
+	}
+	return kq;
 }
 
 void Qint::QintToBinary(bool bit[]) {// đổi từ 4 int ra dãy nhị phân, lưu thông qua tham chiếu bit[],
@@ -511,8 +519,41 @@ Qint Qint::operator+(Qint x) {
 
 	Qint kq;
 
-	string s1 = tobinary(a4) + tobinary(a3) + tobinary(a2) + tobinary(a1);
-	string s2 = tobinary(x.a4) + tobinary(x.a3) + tobinary(x.a2) + tobinary(x.a1);
+	bool check = 0;
+	bool a[128];
+	bool b[128];
+
+	this->QintToBinary(a);
+	x.QintToBinary(b);
+
+
+	if (a[0] == 0 && b[0] == 1 && x == *this)
+		return kq;
+	if (a[0] == 1 && b[0] == 0 && x == *this)
+		return kq;
+	if (a[0] + b[0] == 2)
+		check = 1;
+
+	a[0] = 0;
+	b[0] = 0;
+	Qint b1;
+	Qint b2;
+	b1.BinToQint(a);
+	b2.BinToQint(b);
+
+	if (a[0] == 1 && b[0] == 0) {
+
+		return x - b1;
+	}
+	if (a[0] == 0 && b[0] == 1) {
+		return *this - b2;
+	}
+
+
+
+	string s2 = tobinary(b1.a4) + tobinary(b1.a3) + tobinary(b1.a2) + tobinary(b1.a1);
+	string s1 = tobinary(b2.a4) + tobinary(b2.a3) + tobinary(b2.a2) + tobinary(b2.a1);
+
 
 	string kqstring = addbinary(s1, s2); // tinh toan
 
@@ -520,10 +561,11 @@ Qint Qint::operator+(Qint x) {
 	bool *kqbool = new bool[128];//mang kq
 	memset(kqbool, 0, 128);
 
-
 	for (int i = 0; i < 128; i++) {
 		kqbool[i] = kqstring[i] - '0';//chuyen thanh char
 	}
+
+	kqbool[0] = check;
 
 	kq.BinToQint(kqbool);
 	return kq;
@@ -774,6 +816,10 @@ void QintFile(ifstream &is, ofstream &os) {
 	Qint b1;
 	Qint b2;
 	Qint kq;
+
+	os.open("output.txt", ios::out);
+
+
 	for (int c = 0; c < z; c++) {
 		if (p1[c] == "2") {
 			bool bit1[128] = { 0 };
@@ -836,25 +882,23 @@ void QintFile(ifstream &is, ofstream &os) {
 		bool kqbit[128] = { 0 };
 		kq.QintToBinary(kqbit);
 
-		os.open("output.txt", ios::out);
-
 		if ((p1[c] == "2" && p2[c] == "") | p2[c] == "2") {
 			for (int i = 0; i < 128; i++)
-				cout << kqbit[i];
+				os << kqbit[i];
 		}
 
 		if ((p1[c] == "10" && p2[c] == "") | p2[c] == "10") {
 			string kqdec = BinToDec(kqbit);
-			cout << kqdec;
+			os << kqdec;
 		}
 
 		if ((p1[c] == "16" && p2[c] == "") | p2[c] == "16") {
 			char *kqhex = BinToHex(kqbit);
 			for (int i = 0; i < 32; i++)
-				cout << kqhex[i];
+				os << kqhex[i];
 		}
 
-		cout << endl;
+		os << endl;
 	}
 
 
